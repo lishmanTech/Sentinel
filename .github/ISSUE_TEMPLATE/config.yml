@@ -1,0 +1,27 @@
+
+**.github/ISSUE_TEMPLATE/config.yml**
+
+```yaml
+blank_issues_enabled: false
+contact_links:
+  - name: Discussions
+    url: https://github.com/<org>/<repo>/discussions
+    about: Ask questions and discuss ideas here.
+```
+
+## Testing
+
+1. Push templates to a feature branch.
+2. Open GitHub → Issues → New Issue.
+3. Verify all templates appear correctly.
+4. Confirm required fields enforce validation.
+5. Ensure labels and titles are automatically applied.
+
+## Acceptance Criteria
+
+* ✅ Bug report template created
+* ✅ Feature request template created
+* ✅ Documentation template created
+* ✅ Templates visible in GitHub Issue creation flow
+* ✅ Template validation tested successfully
+* ✅ Consistent issue reporting established

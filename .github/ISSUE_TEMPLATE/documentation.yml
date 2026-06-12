@@ -1,0 +1,47 @@
+name: Documentation
+description: Request documentation improvements
+title: "[DOCS]: "
+labels: ["documentation"]
+body:
+  - type: textarea
+    id: issue
+    attributes:
+      label: Documentation Issue
+      description: What is missing, incorrect, or unclear?
+    validations:
+      required: true
+
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested Improvement
+    validations:
+      required: true
+
+  - type: input
+    id: location
+    attributes:
+      label: Affected File/Page
+      placeholder: docs/setup.md
+Optional Issue Template Config
+
+.github/ISSUE_TEMPLATE/config.yml
+
+blank_issues_enabled: false
+contact_links:
+  - name: Discussions
+    url: https://github.com/<org>/<repo>/discussions
+    about: Ask questions and discuss ideas here.
+Testing
+Push templates to a feature branch.
+Open GitHub → Issues → New Issue.
+Verify all templates appear correctly.
+Confirm required fields enforce validation.
+Ensure labels and titles are automatically applied.
+Acceptance Criteria
+✅ Bug report template created
+✅ Feature request template created
+✅ Documentation template created
+✅ Templates visible in GitHub Issue creation flow
+✅ Template validation tested successfully
+✅ Consistent issue reporting established
