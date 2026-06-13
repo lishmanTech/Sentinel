@@ -1,0 +1,72 @@
+version: '3.9'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: sentinel-postgres
+    environment:
+      POSTGRES_USER: ${DB_USER:-sentinel_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-sentinel_password}
+      POSTGRES_DB: ${DB_NAME:-sentinel_db}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-sentinel_user}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - sentinel-network
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: sentinel-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - sentinel-network
+
+  # NestJS Backend Application
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sentinel-backend
+    environment:
+      NODE_ENV: ${NODE_ENV:-development}
+      PORT: ${PORT:-3000}
+      DATABASE_URL: postgresql://${DB_USER:-sentinel_user}:${DB_PASSWORD:-sentinel_password}@postgres:5432/${DB_NAME:-sentinel_db}
+      REDIS_URL: redis://redis:6379
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - /app/node_modules
+    networks:
+      - sentinel-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  sentinel-network:
+    driver: bridge
