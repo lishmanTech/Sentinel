@@ -28,7 +28,7 @@
     "docker:db:reset": "docker-compose exec backend npx prisma migrate reset",
     "docker:db:studio": "docker-compose exec backend npx prisma studio",
     "docker:ps": "docker-compose ps",
-    "prepare": "husky install",
+    "prepare": "husky || true",
     "lint-staged": "lint-staged"
   },
   "repository": {
