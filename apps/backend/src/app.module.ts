@@ -8,6 +8,7 @@ import { DependencyTrackerModule } from './modules/contracts/dependencies/depend
 import { GovernanceModule } from './modules/governance/governance.module';
 import { SiemModule } from './integrations/siem/siem.module';
 import { ChainsModule } from './modules/chains/chains.module';
+import { RiskAnalyzerModule } from './modules/soroban/risk/risk-analyzer.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { ChainsModule } from './modules/chains/chains.module';
     GovernanceModule,
     SiemModule,
     ChainsModule,
+    RiskAnalyzerModule,
   ],
   controllers: [AppController],
 })
