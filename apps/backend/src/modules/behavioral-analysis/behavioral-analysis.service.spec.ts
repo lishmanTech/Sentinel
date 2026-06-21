@@ -73,28 +73,28 @@ describe('BehavioralAnalysisService', () => {
       const baseline = service.buildBaseline(HISTORY);
       const recent = [TX({ txHash: 'r1', amount: 1000 })];
       const anomalies = service.detectAnomalies(recent, baseline);
-      expect(anomalies.some(a => a.type === 'volume_spike')).toBe(true);
+      expect(anomalies.some((a) => a.type === 'volume_spike')).toBe(true);
     });
 
     it('detects new counterparty not in baseline', () => {
       const baseline = service.buildBaseline(HISTORY);
       const recent = [TX({ txHash: 'r2', counterparty: 'WALLET_UNKNOWN' })];
       const anomalies = service.detectAnomalies(recent, baseline);
-      expect(anomalies.some(a => a.type === 'new_counterparty')).toBe(true);
+      expect(anomalies.some((a) => a.type === 'new_counterparty')).toBe(true);
     });
 
     it('detects unusual asset not in baseline', () => {
       const baseline = service.buildBaseline(HISTORY);
       const recent = [TX({ txHash: 'r3', asset: 'USDC' })];
       const anomalies = service.detectAnomalies(recent, baseline);
-      expect(anomalies.some(a => a.type === 'unusual_asset')).toBe(true);
+      expect(anomalies.some((a) => a.type === 'unusual_asset')).toBe(true);
     });
 
     it('returns no anomalies for normal behaviour', () => {
       const baseline = service.buildBaseline(HISTORY);
       const recent = [TX({ txHash: 'r4', amount: 110 })];
       const anomalies = service.detectAnomalies(recent, baseline);
-      expect(anomalies.every(a => a.type !== 'volume_spike')).toBe(true);
+      expect(anomalies.every((a) => a.type !== 'volume_spike')).toBe(true);
     });
   });
 
