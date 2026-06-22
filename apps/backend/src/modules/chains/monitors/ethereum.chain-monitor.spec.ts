@@ -6,17 +6,17 @@ const mockGetBlockNumber = jest.fn();
 const mockGetBlock = jest.fn();
 
 jest.mock('ethers', () => {
-  // tslint:disable-next-line:no-var-requires
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const actual = jest.requireActual('ethers');
+  const formatEther = actual.formatEther ?? actual.ethers?.formatEther;
   return {
     __esModule: true,
-    ...actual,
     ethers: {
-      ...actual, // ethers v6 mirrors all top-level exports inside the 'ethers' namespace
       JsonRpcProvider: jest.fn().mockImplementation(() => ({
         getBlockNumber: mockGetBlockNumber,
         getBlock: mockGetBlock,
       })),
+      formatEther,
     },
   };
 });
@@ -26,7 +26,8 @@ describe('EthereumChainMonitor', () => {
 
   beforeEach(() => {
     jest.useFakeTimers();
-    jest.clearAllMocks();
+    mockGetBlockNumber.mockReset();
+    mockGetBlock.mockReset();
 
     monitor = new EthereumChainMonitor('http://localhost:8545', 5000);
   });
