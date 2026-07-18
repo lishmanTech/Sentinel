@@ -18,7 +18,10 @@ const OUTCOME_ALERT_MAP: Record<VoteOutcome, (data: AlertData) => AlertData | nu
   [VoteOutcome.Passed]: data => ({
     ...data,
     alertType: 'PROPOSAL_PASSED',
-    severity: data.impact === ProposalImpact.SecurityRelated ? AlertSeverity.Critical : AlertSeverity.High,
+    severity:
+      data.impact === ProposalImpact.SecurityRelated
+        ? AlertSeverity.Critical
+        : AlertSeverity.High,
     outcome: VoteOutcome.Passed,
     message: `Proposal "${data.proposalTitle}" has passed voting`,
   }),
@@ -32,7 +35,10 @@ const OUTCOME_ALERT_MAP: Record<VoteOutcome, (data: AlertData) => AlertData | nu
   [VoteOutcome.Executed]: data => ({
     ...data,
     alertType: 'PROPOSAL_EXECUTED',
-    severity: data.impact === ProposalImpact.SecurityRelated ? AlertSeverity.Critical : AlertSeverity.High,
+    severity:
+      data.impact === ProposalImpact.SecurityRelated
+        ? AlertSeverity.Critical
+        : AlertSeverity.High,
     outcome: VoteOutcome.Executed,
     message: `Proposal "${data.proposalTitle}" has been executed`,
   }),
