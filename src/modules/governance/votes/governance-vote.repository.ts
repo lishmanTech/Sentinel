@@ -115,10 +115,7 @@ export class GovernanceVoteRepository {
   }
 
   async markAsProcessed(proposalId: string, chainId: number): Promise<void> {
-    await this.voteOutcomeRepo.update(
-      { proposalId, chainId },
-      { processed: true },
-    );
+    await this.voteOutcomeRepo.update({ proposalId, chainId }, { processed: true });
     this.logger.debug(`Marked proposal ${proposalId} as processed`);
   }
 

@@ -10,7 +10,6 @@ import { IGovernanceVoteService, VoteMonitoringResult, ProposalVoteData } from '
 import { GovernanceVoteConfig } from './interfaces/governance-vote-config.interface';
 import { classifyProposal } from './utils/proposal-classifier.util';
 
-
 const STATE_TO_OUTCOME_MAP: Record<ProposalState, VoteOutcome> = {
   [ProposalState.Pending]: VoteOutcome.Pending,
   [ProposalState.Active]: VoteOutcome.Pending,
