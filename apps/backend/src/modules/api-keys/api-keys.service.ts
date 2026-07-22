@@ -1,15 +1,11 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { randomBytes, createHash } from 'crypto';
+import { PrismaService } from '../../database/prisma.service';
 import { CreateApiKeyDto, ApiKeyResponseDto, ApiKeyUsageDto } from './dto/api-key.dto';
 
 @Injectable()
 export class ApiKeysService {
-  private prisma: PrismaClient;
-
-  constructor() {
-    this.prisma = new PrismaClient();
-  }
+  constructor(private readonly prisma: PrismaService) {}
 
   private generateKey(): string {
     return `sk_${randomBytes(32).toString('hex')}`;
@@ -72,16 +68,18 @@ export class ApiKeysService {
   }
 
   async revokeApiKey(userId: string, keyId: string): Promise<void> {
-    const apiKey = await this.prisma.apiKey.findUnique({
-      where: { id: keyId },
+    // Scope the lookup to the caller's own keys so a key ID belonging to
+    // another user reports as not-found rather than leaking its existence.
+    const apiKey = await this.prisma.apiKey.findFirst({
+      where: { id: keyId, userId },
     });
 
     if (!apiKey) {
-      throw new NotFoundException(`API key not found`);
+      throw new NotFoundException('API key not found');
     }
 
-    if (apiKey.userId !== userId) {
-      throw new ConflictException(`Unauthorized access to API key`);
+    if (apiKey.revokedAt) {
+      return;
     }
 
     await this.prisma.apiKey.update({
@@ -90,6 +88,10 @@ export class ApiKeysService {
     });
   }
 
+  /**
+   * Validate a presented key and record usage. Returns the owning userId, or
+   * null if the key is unknown or has been revoked.
+   */
   async validateAndUpdateUsage(key: string): Promise<string | null> {
     const keyHash = this.hashKey(key);
 
@@ -110,12 +112,12 @@ export class ApiKeysService {
   }
 
   async getApiKeyUsage(userId: string, keyId: string): Promise<ApiKeyUsageDto> {
-    const apiKey = await this.prisma.apiKey.findUnique({
-      where: { id: keyId },
+    const apiKey = await this.prisma.apiKey.findFirst({
+      where: { id: keyId, userId },
     });
 
-    if (!apiKey || apiKey.userId !== userId) {
-      throw new NotFoundException(`API key not found`);
+    if (!apiKey) {
+      throw new NotFoundException('API key not found');
     }
 
     // Placeholder for actual usage tracking

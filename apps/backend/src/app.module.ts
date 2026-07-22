@@ -18,6 +18,7 @@ import { ProfileModule } from './modules/profile/profile.module';
 import { PrismaModule } from './database/prisma.module';
 import { IncidentsModule } from './modules/incidents/incidents.module';
 import { InvitationsModule } from './modules/invitations/invitations.module';
+import { ApiKeysModule } from './modules/api-keys/api-keys.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { InvitationsModule } from './modules/invitations/invitations.module';
     IncidentsModule,
     ProtocolHealthModule,
     InvitationsModule,
+    ApiKeysModule,
   ],
   controllers: [AppController],
 })
